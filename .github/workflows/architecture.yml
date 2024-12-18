@@ -1,0 +1,45 @@
+name: Generate Kafka Architecture Diagram
+
+on:
+  push:
+    branches: [ trunk ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+          
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz graphviz-dev
+          python -m pip install --upgrade pip
+          pip install diagrams
+          
+      - name: Create architecture diagram
+        run: |
+          python architecture_generator.py
+          ls -la
+          
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -f kafka_architecture.png
+          git status
+          git commit -m "Add Kafka architecture diagram [skip ci]" || echo "No changes to commit"
+          git push
