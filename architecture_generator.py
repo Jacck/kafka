@@ -3,7 +3,7 @@ from diagrams.programming.language import Java
 from diagrams.programming.framework import Spring
 from diagrams.onprem.queue import Kafka
 from diagrams.onprem.client import Client
-from diagrams.generic.database import DB
+from diagrams.generic.storage import Storage
 from diagrams.onprem.compute import Server
 from diagrams.onprem.monitoring import Grafana
 
@@ -41,7 +41,7 @@ def generate_architecture():
             
         with Cluster("Storage & Coordination"):
             zk = Grafana("ZooKeeper")
-            storage = DB("Log Storage")
+            storage = Storage("Log Storage")
             
         with Cluster("Clients"):
             producers = [
