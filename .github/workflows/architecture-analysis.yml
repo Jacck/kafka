@@ -23,11 +23,22 @@ jobs:
         python -m pip install --upgrade pip
         pip install networkx pydot matplotlib
 
+    - name: Debug Environment
+      run: |
+        echo "Current directory:"
+        pwd
+        echo "Directory contents before analysis:"
+        ls -la
+        
     - name: Analyze Architecture
       run: |
+        echo "Running analysis..."
         python .github/scripts/analyze_architecture.py
+        echo "Analysis complete. Directory contents after analysis:"
+        ls -la
         
     - name: Upload Analysis Results
+      if: always()
       uses: actions/upload-artifact@v3
       with:
         name: architecture-analysis
